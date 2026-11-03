@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="fitnessApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRONPULSE - Fitness Equipment Store</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #101411;
+    color: #f4f4f4;
+    line-height: 1.6;
+}
+
+header {
+    background: #171e19;
+    color: white;
+    text-align: center;
+    padding: 25px;
+    border-bottom: 3px solid #b7f000;
+}
+
+header h1 {
+    color: #b7f000;
+    margin: 0;
+    font-size: 36px;
+    letter-spacing: 3px;
+}
+
+nav {
+    background: #263229;
+    padding: 15px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 15px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #b7f000;
+}
+
+section {
+    width: 85%;
+    margin: 30px auto;
+    padding: 25px;
+    background: #1b241e;
+    border: 1px solid #344238;
+    border-radius: 10px;
+}
+
+h2 {
+    color: #b7f000;
+    text-align: center;
+}
+
+input, select, textarea {
+    padding: 10px;
+    margin: 8px;
+    border: 1px solid #647267;
+    border-radius: 5px;
+    background: #101711;
+    color: white;
+    max-width: 90%;
+}
+
+button {
+    padding: 10px 18px;
+    margin: 5px;
+    background: #b7f000;
+    color: #101411;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #d2ff43;
+}
+
+.content {
+    text-align: center;
+}
+
+.welcome {
+    padding: 25px;
+    background: #263229;
+    border-radius: 8px;
+}
+
+.tagline {
+    color: #b7f000;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.comment-list, .task-list {
+    background: #263229;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    overflow: auto;
+}
+
+.delete {
+    background: #d94343;
+    color: white;
+    float: right;
+}
+
+.result {
+    color: #b7f000;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+footer {
+    background: #171e19;
+    text-align: center;
+    padding: 20px;
+    border-top: 2px solid #b7f000;
+}
+
+@media(max-width:600px) {
+    section {
+        width: 95%;
+        padding: 16px;
+    }
+
+    nav a {
+        display: inline-block;
+        margin: 7px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>IRONPULSE</h1>
+    <p>GEAR UP. GET STRONGER.</p>
+</header>
+
+<nav>
+    <a href="#home">Home</a>
+    <a href="#reviews">Customer Reviews</a>
+    <a href="#calculator">Calculator</a>
+    <a href="#workout">Workout Tasks</a>
+</nav>
+
+<!-- Welcome Section -->
+<section id="home" ng-controller="HelloController">
+    <div class="content welcome">
+        <h2>Welcome to IRONPULSE Fitness Store</h2>
+        <h3>{{message}}</h3>
+        <p class="tagline">GEAR UP. GET STRONGER.</p>
+        <p>
+            Discover quality fitness equipment for your home and gym.
+            Explore dumbbells, treadmills, resistance bands and other
+            workout essentials.
+        </p>
+    </div>
+</section>
+
+<!-- Customer Reviews -->
+<section id="reviews" ng-controller="CommentController">
+    <h2>Customer Reviews</h2>
+
+    <div class="content">
+        <p>Share your experience with IRONPULSE fitness equipment.</p>
+
+        <textarea ng-model="txtcomment"
+            placeholder="Write your product review"
+            rows="4" style="width:80%">
+        </textarea>
+
+        <br>
+        <button ng-click="addComment()">Post Review</button>
+
+        <h3>Customer Feedback</h3>
+    </div>
+
+    <div ng-repeat="comment in comments track by $index"
+         class="comment-list">
+        {{comment}}
+        <button class="delete"
+                ng-click="removeItem($index)">Delete</button>
+    </div>
+
+    <p ng-if="comments.length == 0">
+        No reviews yet. Be the first to share your experience!
+    </p>
+</section>
+
+<!-- Calculator -->
+<section id="calculator" ng-controller="CalculatorController">
+    <h2>Fitness Store Calculator</h2>
+
+    <div class="content">
+        <p>Enter two values to calculate.</p>
+
+        <input type="number" ng-model="a"
+               placeholder="First Number">
+        <br>
+
+        <input type="number" ng-model="b"
+               placeholder="Second Number">
+        <br>
+
+        <select ng-model="operator">
+            <option value="+">Addition (+)</option>
+            <option value="-">Subtraction (-)</option>
+            <option value="*">Multiplication (*)</option>
+            <option value="/">Division (/)</option>
+        </select>
+
+        <br>
+        <button ng-click="calculate()">Calculate</button>
+
+        <h3 class="result">Result: {{result}}</h3>
+    </div>
+</section>
+
+<!-- Workout To-Do List -->
+<section id="workout" ng-controller="TodoController">
+    <h2>My Workout To-Do List</h2>
+
+    <div class="content">
+        <p>Add your daily workout activities or fitness goals.</p>
+
+        <input type="text" ng-model="title"
+               placeholder="Enter a workout task">
+
+        <button ng-click="add()">Add Task</button>
+    </div>
+
+    <h3>My Fitness Tasks</h3>
+
+    <div ng-repeat="task in tasks track by $index"
+         class="task-list">
+        {{task}}
+
+        <button class="delete"
+                ng-click="removeTask($index)">Delete</button>
+    </div>
+
+    <p ng-if="tasks.length == 0">
+        No workout tasks added yet.
+    </p>
+</section>
+
+<footer>
+    <h3>IRONPULSE Fitness Equipment Store</h3>
+    <p>GEAR UP. GET STRONGER.</p>
+    <p>&copy; 2026 IRONPULSE. All Rights Reserved.</p>
+</footer>
+
+<script>
+var app = angular.module("fitnessApp", []);
+
+// Welcome Controller
+app.controller("HelloController", function($scope) {
+    $scope.message = "Welcome to your fitness journey!";
+});
+
+// Customer Review Controller
+app.controller("CommentController", function($scope) {
+    $scope.comments = [];
+
+    $scope.addComment = function() {
+        if ($scope.txtcomment &&
+            $scope.txtcomment.trim() !== "") {
+
+            $scope.comments.push($scope.txtcomment.trim());
+            $scope.txtcomment = "";
+        }
+    };
+
+    $scope.removeItem = function(index) {
+        $scope.comments.splice(index, 1);
+    };
+});
+
+// Calculator Controller
+app.controller("CalculatorController", function($scope) {
+    $scope.a = 0;
+    $scope.b = 0;
+    $scope.operator = "+";
+
+    $scope.calculate = function() {
+        if ($scope.operator == "+") {
+            $scope.result = $scope.a + $scope.b;
+        }
+        else if ($scope.operator == "-") {
+            $scope.result = $scope.a - $scope.b;
+        }
+        else if ($scope.operator == "*") {
+            $scope.result = $scope.a * $scope.b;
+        }
+        else if ($scope.operator == "/") {
+            if ($scope.b == 0) {
+                $scope.result = "Cannot divide by zero";
+            }
+            else {
+                $scope.result = $scope.a / $scope.b;
+            }
+        }
+    };
+});
+
+// Workout To-Do List Controller
+app.controller("TodoController", function($scope) {
+    $scope.tasks = [];
+
+    $scope.add = function() {
+        if ($scope.title &&
+            $scope.title.trim() !== "") {
+
+            $scope.tasks.push($scope.title.trim());
+            $scope.title = "";
+        }
+    };
+
+    $scope.removeTask = function(index) {
+        $scope.tasks.splice(index, 1);
+    };
+});
+</script>
+
+</body>
+</html>
